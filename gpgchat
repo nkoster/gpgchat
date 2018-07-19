@@ -36,7 +36,7 @@ export GPG_TTY=$(tty)
 
 echo -n 'Private key passphrase (will not echo): '
 read -s passphrase
-echo
+echo '********'
 echo
 
 echo "Starting listener at port $port_local"
