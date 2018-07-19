@@ -27,8 +27,7 @@ host="$2"
 port_local="$3"
 [[ $# -eq 3 ]] && port_remote=$port_local || port_remote=$4
 
-keys=$(gpg --list-keys "$user_remote" | grep -c '^$')
-if [ $keys -gt 1 ]; then
+if [ "$(gpg --list-keys "$user_remote" | grep -c '^$')" -gt 1 ]; then
     echo "Too many keys for remote user"
     exit 1
 fi
