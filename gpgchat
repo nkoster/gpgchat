@@ -4,8 +4,8 @@ echo
 echo "GPG chat 1.0"
 echo
 
-if [ $# -lt 4 ]; then
-    echo "Usage: $0 <remote PGP id> <host> <local port> <remote port>"
+if [ $# -lt 3 ]; then
+    echo "Usage: $0 <remote PGP id> <host> <local port> [remote port]"
     echo
     exit 1
 fi
@@ -13,7 +13,7 @@ fi
 user_remote="$1"
 host="$2"
 port_local="$3"
-port_remote="$4"
+[[ $# -eq 3 ]] && port_remote=$port_local || port_remote=$4
 
 keys=$(gpg --list-keys "$user_remote" | grep -c '^$')
 if [ $keys -gt 1 ]; then
