@@ -34,7 +34,7 @@ fi
 
 export GPG_TTY=$(tty)
 
-echo -n 'Private key password (will not echo): '
+echo -n 'Private key passphrase (will not echo): '
 read -s passphrase
 echo
 echo
