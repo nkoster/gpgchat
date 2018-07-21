@@ -42,7 +42,16 @@ echo
 echo "Starting listener at port $port_local"
 while true ;\
     do output=`ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null` ;\
-    echo -e "\033[32m${output}\033[0m" ;\
+    if echo "$output" | grep -q '^<<<'; then
+        file_input="${output#???}"
+        file_input=${file_input#"${file_input%%[![:space:]]*}"}
+        file_input=/tmp/${file_input##*/}
+        echo "<<< receiving file $file_input"
+        ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >$file_input
+        echo "<<< $file_input ready"
+    else
+        echo -e "\033[32m${output}\033[0m"
+    fi
 done &
 
 echo -e "Initiating chat with ${user_remote} at $host, port $port_remote"
@@ -51,5 +60,21 @@ echo
 while true
 do
     read n
-    echo "$n" | gpg -e -r "$user_remote" | ncat $host $port_remote
+    if echo "$n" | grep -q '^>>>'; then
+        file="${n#???}"
+        file=${file#"${file%%[![:space:]]*}"}
+        if [ "$file" == "" ]; then
+            file=$(python ./getfile.py)
+        fi
+        if [ -f "$file" ]; then
+            echo ">>> sending $file to $user_remote"
+            echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
+            sleep 1
+            cat $file | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
+        else
+            echo ">>> \"$file\" not found"
+        fi
+    else
+        echo "$n" | gpg -e -r "$user_remote" | ncat $host $port_remote
+    fi
 done
