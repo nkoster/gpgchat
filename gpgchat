@@ -41,12 +41,12 @@ echo
 
 echo "Starting listener at port $port_local"
 while true
-    do output=`ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null`
+    do output=$(ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null)
     if echo "$output" | grep -q '^<<<'; then
         file_input="${output#???}"
         file_input=${file_input#"${file_input%%[![:space:]]*}"}
         file_input=/tmp/${file_input##*/}
-        echo "<<< receiving file $file_input"
+        echo "<<< receiving file $file_input from $user_remote"
         ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >$file_input
         echo "<<< $file_input ready"
     else
@@ -67,7 +67,7 @@ do
             file=$(python ./getfile.py)
         fi
         if [ -f "$file" ]; then
-            echo ">>> sending $file to $user_remote"
+            echo ">>> sending file $file to $user_remote"
             echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
             sleep 1
             cat $file | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
