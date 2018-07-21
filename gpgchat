@@ -33,6 +33,7 @@ if [ "$(gpg --list-keys "$user_remote" | grep -c '^$')" -gt 1 ]; then
 fi
 
 export GPG_TTY=$(tty)
+script_path=$(dirname $0)
 
 echo -n 'Private key passphrase (will not echo): '
 read -s passphrase
@@ -64,7 +65,7 @@ do
         file="${n#???}"
         file=${file#"${file%%[![:space:]]*}"}
         if [ "$file" == "" ]; then
-            file=$(python ./getfile.py)
+            file=$(python $script_path/getfile.py)
         fi
         if [ -f "$file" ]; then
             echo ">>> sending file $file to $user_remote"
