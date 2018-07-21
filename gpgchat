@@ -34,6 +34,7 @@ fi
 
 export GPG_TTY=$(tty)
 script_path=$(dirname $0)
+mkdir -p /tmp/gpgchat
 
 echo -n 'Private key passphrase (will not echo): '
 read -s passphrase
@@ -46,7 +47,7 @@ while true
     if echo "$output" | grep -q '^<<<'; then
         file_input="${output#???}"
         file_input=${file_input#"${file_input%%[![:space:]]*}"}
-        file_input="/tmp/${file_input##*/}"
+        file_input="/tmp/gpgchat/${file_input##*/}"
         echo "<<< receiving file $file_input from $user_remote"
         ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >"$file_input"
         echo "<<< $file_input ready"
@@ -61,22 +62,24 @@ echo
 while true
 do
     read n
-    if echo "$n" | grep -q '^>>>'; then
-        file="${n#???}"
-        file=${file#"${file%%[![:space:]]*}"}
-        if [ "$file" == "" ]; then
-            file=$(python $script_path/getfile.py)
-        fi
-        if [ -f "$file" ]; then
-            echo ">>> sending file $file to $user_remote"
-            echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
-            sleep 1
-            cat "$file" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
-            echo ">>> file has been sent"
+    if [ "$n" != "" ]; then
+        if echo "$n" | grep -q '^>>>'; then
+            file="${n#???}"
+            file=${file#"${file%%[![:space:]]*}"}
+            if [ "$file" == "" ]; then
+                file=$(python $script_path/getfile.py)
+            fi
+            if [ -f "$file" ]; then
+                echo ">>> sending file $file to $user_remote"
+                echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
+                sleep 1
+                cat "$file" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
+                echo ">>> file has been sent"
+            else
+                echo ">>> \"$file\" not found"
+            fi
         else
-            echo ">>> \"$file\" not found"
+            echo "$n" | gpg -e -r "$user_remote" | ncat $host $port_remote
         fi
-    else
-        echo "$n" | gpg -e -r "$user_remote" | ncat $host $port_remote
     fi
 done
