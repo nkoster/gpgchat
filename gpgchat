@@ -40,8 +40,8 @@ echo '********'
 echo
 
 echo "Starting listener at port $port_local"
-while true ;\
-    do output=`ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null` ;\
+while true
+    do output=`ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null`
     if echo "$output" | grep -q '^<<<'; then
         file_input="${output#???}"
         file_input=${file_input#"${file_input%%[![:space:]]*}"}
