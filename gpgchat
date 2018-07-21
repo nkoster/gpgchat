@@ -46,9 +46,9 @@ while true
     if echo "$output" | grep -q '^<<<'; then
         file_input="${output#???}"
         file_input=${file_input#"${file_input%%[![:space:]]*}"}
-        file_input=/tmp/${file_input##*/}
+        file_input="/tmp/${file_input##*/}"
         echo "<<< receiving file $file_input from $user_remote"
-        ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >$file_input
+        ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >"$file_input"
         echo "<<< $file_input ready"
     else
         echo -e "\033[32m${output}\033[0m"
@@ -71,7 +71,8 @@ do
             echo ">>> sending file $file to $user_remote"
             echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
             sleep 1
-            cat $file | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
+            cat "$file" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
+            echo ">>> file has been sent"
         else
             echo ">>> \"$file\" not found"
         fi
