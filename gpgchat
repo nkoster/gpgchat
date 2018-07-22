@@ -49,9 +49,9 @@ do
         file_input="${output#???}"
         file_input=${file_input#"${file_input%%[![:space:]]*}"}
         file_input="/tmp/gpgchat/${file_input##*/}"
-        echo -e "\033[33m<<< receiving file $file_input from $user_remote\033[0m"
+        echo -e "\033[33m<<< receiving file \"$file_input\" from $user_remote\033[0m"
         ncat -l $port_local | gpg -d --batch --passphrase "$passphrase" 2>/dev/null | base64 -d >"$file_input"
-        echo -e "\033[33m<<< $file_input ready\033[0m"
+        echo -e "\033[33m<<< file \"$file_input\" ready\033[0m"
     else
         echo -e "\033[32m${output}\033[0m"
     fi
@@ -71,7 +71,7 @@ do
                 file_output=$(python $script_path/getfile.py)
             fi
             if [ -f "$file_output" ]; then
-                echo -e "\033[34m>>> sending file $file_output to $user_remote\033[0m"
+                echo -e "\033[34m>>> sending file \"$file_output\" to $user_remote\033[0m"
                 echo "<<<$file_output" | gpg -e -r "$user_remote" | ncat $host $port_remote
                 sleep 1
                 cat "$file_output" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
