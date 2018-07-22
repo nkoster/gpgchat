@@ -29,7 +29,7 @@ port_local="$3"
 
 keys=$(gpg --list-keys "$user_remote" 2>/dev/null | grep -c '^$')
 if [ "$keys" -eq 0 ]; then
-    echo "No matching key for remote user"
+    echo "No matching key for \"$user_remote\""
     echo
     exit 1
 fi
