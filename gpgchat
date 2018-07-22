@@ -25,7 +25,7 @@ fi
 user_remote="$1"
 host="$2"
 port_local="$3"
-[[ $# -eq 3 ]] && port_remote=$port_local || port_remote=$4
+[[ $# -eq 3 ]] && port_remote="$port_local" || port_remote="$4"
 
 if [ "$(gpg --list-keys "$user_remote" | grep -c '^$')" -gt 1 ]; then
     echo "Too many matching keys for remote user"
@@ -63,11 +63,11 @@ echo
 while true
 do
     read message
-    if [ ! -z $message ]; then
+    if [ ! -z "$message" ]; then
         if echo "$message" | grep -q '^>>>'; then
             file_output="${message#???}"
             file_output=${file_output#"${file_output%%[![:space:]]*}"}
-            if [ -z $file_output ]; then
+            if [ -z "$file_output" ]; then
                 file_output=$(python $script_path/getfile.py)
             fi
             if [ -f "$file_output" ]; then
@@ -77,7 +77,7 @@ do
                 cat "$file_output" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
                 echo -e "\033[34m>>> file has been sent\033[0m"
             else
-                [[ -z $file_output ]] || echo ">>> \"$file_output\" not found"
+                [[ -z "$file_output" ]] || echo ">>> \"$file_output\" not found"
             fi
         else
             echo "$message" | gpg -e -r "$user_remote" | ncat $host $port_remote
