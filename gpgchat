@@ -27,8 +27,16 @@ host="$2"
 port_local="$3"
 [[ $# -eq 3 ]] && port_remote="$port_local" || port_remote="$4"
 
-if [ "$(gpg --list-keys "$user_remote" | grep -c '^$')" -gt 1 ]; then
-    echo "Too many matching keys for remote user"
+keys=$(gpg --list-keys "$user_remote" 2>/dev/null | grep -c '^$')
+if [ "$keys" -eq 0 ]; then
+    echo "No matching key for remote user"
+    echo
+    exit 1
+fi
+if [ "$keys" -ne 1 ]; then
+    gpg --list-keys "$user_remote"
+    echo "Too many matching keys for \"$user_remote\""
+    echo
     exit 1
 fi
 
@@ -57,9 +65,7 @@ do
     fi
 done &
 
-echo -e "Initiating chat with ${user_remote} at $host, port $port_remote"
-echo
-
+echo -e "Initiating chat with ${user_remote} at $host, port $port_remote\n"
 while true
 do
     read message
