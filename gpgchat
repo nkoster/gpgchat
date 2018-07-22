@@ -62,25 +62,25 @@ echo
 
 while true
 do
-    read n
-    if [ "$n" != "" ]; then
-        if echo "$n" | grep -q '^>>>'; then
-            file="${n#???}"
-            file=${file#"${file%%[![:space:]]*}"}
-            if [ "$file" == "" ]; then
-                file=$(python $script_path/getfile.py)
+    read message
+    if [ ! -z $message ]; then
+        if echo "$message" | grep -q '^>>>'; then
+            file_output="${message#???}"
+            file_output=${file_output#"${file_output%%[![:space:]]*}"}
+            if [ -z $file_output ]; then
+                file_output=$(python $script_path/getfile.py)
             fi
-            if [ -f "$file" ]; then
-                echo -e "\033[34m>>> sending file $file to $user_remote\033[0m"
-                echo "<<<$file" | gpg -e -r "$user_remote" | ncat $host $port_remote
+            if [ -f "$file_output" ]; then
+                echo -e "\033[34m>>> sending file $file_output to $user_remote\033[0m"
+                echo "<<<$file_output" | gpg -e -r "$user_remote" | ncat $host $port_remote
                 sleep 1
-                cat "$file" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
+                cat "$file_output" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
                 echo -e "\033[34m>>> file has been sent\033[0m"
             else
-                echo ">>> \"$file\" not found"
+                [[ -z $file_output ]] || echo ">>> \"$file_output\" not found"
             fi
         else
-            echo "$n" | gpg -e -r "$user_remote" | ncat $host $port_remote
+            echo "$message" | gpg -e -r "$user_remote" | ncat $host $port_remote
         fi
     fi
 done
