@@ -80,9 +80,7 @@ do
                 echo -e "\033[34m>>> sending file \"$file_output\" to \"$user_remote\"\033[0m"
                 echo "<<<$file_output" | gpg -e -r "$user_remote" | ncat $host $port_remote
                 sleep 1
-                cat "$file_output" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote
-                exit_code=$?
-                if [ "$exit_code" -eq 0 ]; then
+                if cat "$file_output" | base64 | gpg -e -r "$user_remote" | ncat $host $port_remote; then
                     echo -e "\033[34m>>> file has been sent\033[0m"
                 else
                     echo -e "\033[31m>>> file has not been sent\033[0m"
