@@ -1,6 +1,6 @@
 ![alt text](https://raw.githubusercontent.com/nkoster/gpgchat/master/upload.png "gpgchat")
 
-Super simple bash script that enables a PGP (GnuPG) encrypted chat between two hosts,
+Simple bash script that enables a PGP (GnuPG) encrypted chat between two hosts,
 when the script is used on both hosts.
 
 You can also exchange files, encrypted, during a chat session.
