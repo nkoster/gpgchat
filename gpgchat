@@ -88,6 +88,15 @@ do
             else
                 [[ -z "$file_output" ]] || echo ">>> file \"$file_output\" not found"
             fi
+        elif echo "$message" | grep -q '^!!!'; then
+            command="${message#???}"
+            command=${command#"${command%%[![:space:]]*}"}
+            [[ -z $command ]] && command="sh"
+            echo -ne "\033[34m!!! executing \"$command\""
+            [[ "$command" == "sh" ]] && echo -n ", type exit to return"
+            echo -e "\033[0m"
+            eval "$command"
+            echo -e "\033[34m!!! finished \"$command\"\033[0m"
         else
             echo "$message" | gpg -e -r "$user_remote" | ncat $host $port_remote
         fi
