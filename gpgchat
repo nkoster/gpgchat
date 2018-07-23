@@ -95,7 +95,11 @@ do
             echo -ne "\033[34m!!! executing \"$command\""
             [[ "$command" == "sh" ]] && echo -n ", type exit to return"
             echo -e "\033[0m"
-            eval "$command"
+            if command -v "${command%% *}" >/dev/null 2>&1; then
+                eval "$command"
+            else
+                echo -e "\033[31m!!! \"$command\" failed"
+            fi
             echo -e "\033[34m!!! finished \"$command\"\033[0m"
         else
             echo "$message" | gpg -e -r "$user_remote" | ncat $host $port_remote
