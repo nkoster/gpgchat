@@ -19,7 +19,7 @@ On the remote host, the file goes to **`/tmp/gpgchat/`**.
 
 ### Execute a command
 You can type **`!!![command]`** to run a command inside a chat.
-For instance, you can run **`!!!cd ..`** to change the runtime directory
+For example, you can type **`!!!cd ..`** to change the runtime directory
 to the parent directory.
 If you omit the command, the default OS shell will be executed.
 
