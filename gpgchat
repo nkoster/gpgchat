@@ -70,7 +70,7 @@ while true
 do
     read message
     if [ ! -z "$message" ]; then
-        if echo "$message" | grep -q '^>>>'; then
+        if [ "${message:0:3}" == ">>>" ]; then
             file_output="${message#???}"
             file_output=${file_output#"${file_output%%[![:space:]]*}"}
             if [ -z "$file_output" ]; then
@@ -88,7 +88,7 @@ do
             else
                 [[ -z "$file_output" ]] || echo ">>> file \"$file_output\" not found"
             fi
-        elif echo "$message" | grep -q '^!!!'; then
+        elif [ "${message:0:3}" == "!!!" ]; then
             command="${message#???}"
             command=${command#"${command%%[![:space:]]*}"}
             [[ -z $command ]] && command="sh"
