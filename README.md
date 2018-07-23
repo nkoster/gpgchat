@@ -2,6 +2,7 @@
 
 Simple bash script that enables a PGP (GnuPG) encrypted chat between two hosts,
 and two single public keys, when the script is used on both hosts.
+You can use an arbitrary TCP port.
 You can also transfer a file, PGP encrypted, during a chat. Plus, you can execute
 a local command, or run a shell, inside a chat.
 
