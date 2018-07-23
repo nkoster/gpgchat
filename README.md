@@ -19,4 +19,4 @@ In case you did not specify a file, a file selection dialog will execute.
 
 ### Execute a command
 You can type `!!![command]` to run a command within a chat session.
-If you omit the command, the default OS shell will be excuted.
+If you omit the command, the default OS shell will be executed.
