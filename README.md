@@ -5,7 +5,7 @@ and two single public keys, when the script is used on both hosts.
 
 You can also transfer a file, PGP encrypted, during a chat session.
 
-Plus, you can execute a local command, or run a shell, within a chat session.
+Plus, you can execute a local command, or run a shell, inside a chat session.
 
 ### Usage
 ```
@@ -19,7 +19,7 @@ In case you did not specify a file, a file selection dialog will execute.
 On the remote host, the file goes to **`/tmp/gpgchat/`**.
 
 ### Execute a command
-You can type **`!!![command]`** to run a command within a chat session.
+You can type **`!!![command]`** to run a command inside a chat session.
 If you omit the command, the default OS shell will be executed.
 
 ### Dependencies
