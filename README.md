@@ -23,5 +23,5 @@ You can type **`!!![command]`** to run a command within a chat session.
 If you omit the command, the default OS shell will be executed.
 
 ### Dependencies
-The script is depending on **`gpg`** and **`ncat`** (part of the **`nmap`**
-package), and **`python`** for the Gtk+ file selection dialog. 
+The script is depending on **`gpg`** (GnuPG PGP), **`ncat`** (part of
+the **`nmap`** package), and **`python`** for the Gtk+ file selection dialog. 
