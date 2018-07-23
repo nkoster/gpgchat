@@ -4,13 +4,13 @@ echo
 echo "GPG chat 1.0"
 echo
 
-if ! type gpg>/dev/null; then
+if ! type gpg >/dev/null; then
     echo "\"gpg\" missing. Please install the \"gnupg\" package."
     echo
     exit 1
 fi
 
-if ! type ncat>/dev/null; then
+if ! type ncat >/dev/null; then
     echo "\"ncat\" missing. Please install the \"nmap\" package."
     echo
     exit 1
