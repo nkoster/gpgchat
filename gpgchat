@@ -65,6 +65,18 @@ do
     fi
 done &
 
+ctrl_c() {
+    if [ -z "$(ls -A /tmp/gpgchat)" ]; then
+        echo ; echo
+    else
+        echo -e "\n\n\033[33mDon't forget the /tmp/gpgchat/ content:\033[0m\n"
+        find /tmp/gpgchat/ | sed -n '1!p'
+        echo
+    fi
+    exit 0
+}
+trap ctrl_c INT
+
 echo -e "Initiating chat with \"$user_remote\" at $host, port $port_remote\n"
 while true
 do
